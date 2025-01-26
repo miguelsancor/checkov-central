@@ -43,6 +43,7 @@ jobs:
           git commit -m "Update Checkov report"
           git push https://${{ secrets.REPO_TOKEN }}@github.com/miguelsancor/repo1.git reports --force
 
+          
       # Paso 5: Ejecutar Checkov en repo2 y Guardar el Reporte
       - name: Run Checkov on repo2
         run: |
@@ -56,4 +57,4 @@ jobs:
           git commit -m "Update Checkov report"
           git push https://${{ secrets.REPO_TOKEN }}@github.com/miguelsancor/repo2.git reports --force
 
-          
+         
