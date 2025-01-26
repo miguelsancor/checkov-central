@@ -1,0 +1,57 @@
+name: Checkov Validation and Report Updates
+
+on:
+  workflow_dispatch: # Permitir ejecución manual
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  checkov:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Paso 1: Checkout del Repositorio Central
+      - name: Checkout Central Repository
+        uses: actions/checkout@v3
+
+      # Paso 2: Clonar los Repositorios Adicionales
+      - name: Clone Additional Repositories
+        run: |
+          git clone https://github.com/miguelsancor/repo1.git repo1
+          git clone https://github.com/miguelsancor/repo2.git repo2
+
+      # Paso 3: Instalar Checkov
+      - name: Install Checkov
+        run: |
+          python -m pip install --upgrade pip
+          pip install checkov
+
+      # Paso 4: Ejecutar Checkov en repo1 y Guardar el Reporte
+      - name: Run Checkov on repo1
+        run: |
+          checkov -d repo1 --output json > checkov-report.json || true
+          cd repo1
+          git checkout reports || git checkout -b reports
+          mv ../checkov-report.json .
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add checkov-report.json
+          git commit -m "Update Checkov report"
+          git push origin reports --force
+
+      # Paso 5: Ejecutar Checkov en repo2 y Guardar el Reporte
+      - name: Run Checkov on repo2
+        run: |
+          checkov -d repo2 --output json > checkov-report.json || true
+          cd repo2
+          git checkout reports || git checkout -b reports
+          mv ../checkov-report.json .
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add checkov-report.json
+          git commit -m "Update Checkov report"
+          git push origin reports --force
