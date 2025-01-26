@@ -21,8 +21,8 @@ jobs:
       # Paso 2: Clonar los Repositorios Adicionales
       - name: Clone Additional Repositories
         run: |
-          git clone https://github.com/miguelsancor/repo1.git repo1
-          git clone https://github.com/miguelsancor/repo2.git repo2
+          git clone https://${{ secrets.REPO_TOKEN }}@github.com/<owner>/repo1.git repo1
+          git clone https://${{ secrets.REPO_TOKEN }}@github.com/<owner>/repo2.git repo2
 
       # Paso 3: Instalar Checkov
       - name: Install Checkov
@@ -41,7 +41,7 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add checkov-report.json
           git commit -m "Update Checkov report"
-          git push origin reports --force
+          git push https://${{ secrets.REPO_TOKEN }}@github.com/<owner>/repo1.git reports --force
 
       # Paso 5: Ejecutar Checkov en repo2 y Guardar el Reporte
       - name: Run Checkov on repo2
@@ -54,4 +54,4 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add checkov-report.json
           git commit -m "Update Checkov report"
-          git push origin reports --force
+          git push https://${{ secrets.REPO_TOKEN }}@github.com/<owner>/repo2.git reports --force
