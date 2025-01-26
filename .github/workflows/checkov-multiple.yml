@@ -55,3 +55,5 @@ jobs:
           git add checkov-report.json
           git commit -m "Update Checkov report"
           git push https://${{ secrets.REPO_TOKEN }}@github.com/miguelsancor/repo2.git reports --force
+
+          
